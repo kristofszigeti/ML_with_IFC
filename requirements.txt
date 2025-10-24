@@ -1,0 +1,6 @@
+ifcopenshell
+pandas
+numpy
+matplotlib
+scikit-learn
+streamlit
