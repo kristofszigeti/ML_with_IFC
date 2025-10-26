@@ -1,5 +1,5 @@
 # =============================================
-#
+# extract_ifc_data.py
 # =============================================
 # 7.4.2. Data Extraction from IFC
 import ifcopenshell # loads package for handling ifc files
@@ -13,7 +13,7 @@ For parsing the file, it uses the 'ifcopenshell.util.element' module.
 During the parsing step, it checks if the element is a beam, and if it is, with the library pandas, it extracts the GUID, Name, and Type. 
 An initial empty list is created to store the extracted data. For-loop is used to iterate over the beams.
 For extracting the data, it uses the 'pandas' package.
-At the end, it saves the extracted data to a csv file.
+At the end, it saves the extracted data to a beam_data.csv file.
 """
 print("*** This is the start. *** \n")
 # INPUT
@@ -28,7 +28,7 @@ except Exception as e:
     print(f"Error while opening the IFC file. {e} Check the file path.")
 
 # stores the beams from the IFC model in a variable
-# ifc_bea245241msbyname = ifc_model.by_name("BEAM") # AttributeError: nincs 'by_name'
+# ifc_beam_byname = ifc_model.by_name("BEAM") # AttributeError: nincs 'by_name'
 ifc_beams = ifc_model.by_type("IfcBeam") # minden "IfcBeam"; tudjuk, hogy van ifcBeam => kell, hogy találjon
 number_of_beams = len(ifc_beams)
 if ifc_beams is None: # if there is no 'IfcBeam' in the ifc model.
