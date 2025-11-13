@@ -18,16 +18,16 @@ Later the model is going to be trained on real-valued features.
 For this in-between step the trained model is going to be saved to file 'isolationforest_placeholder.pkl'.
 """
 print("*** This is the start. *** \n")
-# INPUT: reads the placeholder dataset: features.csv
-input_path = Path("../data/output/features.csv") # 1. access to the file with 1 column and 166 rows
+# INPUT: reads the placeholder dataset: features_dummy.csv
+input_path = Path("../data/output/features_dummy.csv")
 dataframe = pandas.read_csv(input_path) # 2. reading the file to be a dataframe
 
 # quick check on the dataframe by displaying it, whether we have the expected input
-print(dataframe.head()) # it supposes to contain only one column with (dummy) numerical values like 1,1,1,...
-if dataframe["Feature"].all() == 1:
-    print("OK, dataframe is dummy.")
-else:
-    print("!NOT dummy!")
+# print(dataframe.head())
+# if dataframe["Feature"].all() == 1:
+#     print("OK, dataframe is dummy.")
+# else:
+#     print("This is a real one!")
 
 # the Isolation Forest algorithm
 """
@@ -37,7 +37,7 @@ determining outliers. rates the isolation for each sample
 """
 # SET UP the model parameters
 """
-IsolationForest = fa-alapú, unsupervised (tanítatlan) anomáliadetektor.
+IsolationForest = fa-alapú, unsupervised anomáliadetektor
 A "contamination" paraméter megmondja, anomália-küszöb
 Mivel most a placeholder adaton minden "normális", 0.05 (5%) csak tesztérték.
 A contamination paraméter az Isolation Forest algoritmusban nem a tanítóadat tényleges hibaarányát írja le, hanem az anomáliákhoz tartozó küszöbérték meghatározásához szükséges technikai beállítás.
@@ -50,39 +50,42 @@ ml_iforest = IsolationForest( # unsupervised learning for anomaly detection
     contamination = 0.05, # necessary for determining the threshold for outliers, which is the ratio of the most anomalous observations, assumption! no expectation
     random_state = 42 # random seed for reproducibility, which is used to initialize the random number generator
 )
-
+print(type(ml_iforest)) # <class 'sklearn.ensemble._iforest.IsolationForest'>
 # TRAIN the model
 # using random samples (records) the model creates a decision tree to rate the isolation for each sample by counting the splits of tree
-# isolate a 'normal' sample -> many data
-# isolate an 'anomaly' sample -> less data
-ml_iforest.fit( # this one carries out the actual training process of the 'ml_iforest' model
+# isolate a 'normal' sample -> many branch
+# isolate an 'anomaly' sample -> less branch
+ml_iforest.fit( # this one carries dataframe_cleaned the actual training process of the 'ml_iforest' model
     dataframe, # X = training data. now it is anomaly-free! -> only dummy training
     y = None, # y = optional target variable, not used in this case
     sample_weight = None # None (default) means each record is treated as an independent, !equally weighted! observation
 )
 
-# PREDICTION
-# gives a score for each record
-predictions = ml_iforest.predict(dataframe) # Predict if a particular sample is an outlier or not
-# print(predictions.head())
+# FLAGGING, "PREDICTION"
+# gives a flag for each record # +1 or -1 indicating outlier or not
+flags = ml_iforest.predict(dataframe) # Predict if a particular record is an outlier or not
+# print(flags.head())
+scores = ml_iforest.decision_function(dataframe) # the less the score, the more anomalous # the certainty of the anomaly
 
-# APPEND the predictions as 'AnomalyFlag' to the existing dummy dataframe into a new column
-dataframe["AnomalyFlag"] = predictions
-flagged_dataframe = dataframe
+# RESULT
+# APPEND the flags as 'AnomalyFlag' to the existing dummy dataframe into a new column
+flagged_dataframe = dataframe.copy()
+flagged_dataframe["AnomalyFlag"] = flags
+flagged_dataframe["Scores"] = scores
 
 # OUTPUT csv
-output_path = Path("../data/output/flagged_dataframe.csv") # path declaration
+output_path = Path("../data/output/flagged_features_dummy.csv") # path declaration
 output_path.parent.mkdir(parents=True, exist_ok=True) # path creation
-# creating a new csv file with the predictions
+# creating a new csv file with the flags
 flagged_dataframe.to_csv(output_path, index=False)
 # print(dataframe.head())
+print(flagged_dataframe.head())
 
 # OUTPUT pkl = the 'whole model itself' including decision trees, hyperparameters, fitted data
-model_output_path = Path("../data/output/models/isolationforest_placeholder.pkl")
+model_output_path = Path("../data/output/models/isolationforest_dummy.pkl")
 model_output_path.parent.mkdir(parents=True, exist_ok=True)
 joblib.dump(value=ml_iforest, filename=model_output_path)
 print(f"Trained ML saved to: {model_output_path}")
-print(flagged_dataframe.head())
 
 print("\n *** This is the end. ***")
 # =============================================

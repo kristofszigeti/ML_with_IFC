@@ -19,7 +19,6 @@ print("*** This is the start. *** \n")
 # INPUT
 # Open the IFC file, 'r' for reading
 ifc_path = Path("../data/input/OF3.ifc") # path to the IFC file within the project folder
-out_path = Path("../data/output/beam_data.csv") # this is the output path for the csv file
 
 try:
     ifc_model = ifcopenshell.open(ifc_path) # opens the file path and only opens the file path, does not parse it yet
@@ -27,6 +26,7 @@ try:
 except Exception as e:
     print(f"Error while opening the IFC file. {e} Check the file path.")
 
+out_path = Path("../data/output/beam_data.csv") # this is the output path for the csv file
 # stores the beams from the IFC model in a variable
 # ifc_beam_byname = ifc_model.by_name("BEAM") # AttributeError: nincs 'by_name'
 ifc_beams = ifc_model.by_type("IfcBeam") # minden "IfcBeam"; tudjuk, hogy van ifcBeam => kell, hogy találjon
