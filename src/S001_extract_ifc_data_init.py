@@ -18,7 +18,7 @@ At the end, it saves the extracted data to a beam_data.csv file.
 print("*** This is the start. *** \n")
 # INPUT
 # Open the IFC file, 'r' for reading
-ifc_path = Path("../data/input/OF3.ifc") # path to the IFC file within the project folder
+ifc_path = Path("../data/input/ifc/OF3.ifc") # path to the IFC file within the project folder
 
 try:
     ifc_model = ifcopenshell.open(ifc_path) # opens the file path and only opens the file path, does not parse it yet
@@ -58,7 +58,10 @@ beam_dataframe = pandas.DataFrame(beam_data, columns=["GUID", "Name", "Type"])
 # ellenőrzés a terminálon:
 # print(beam_dataframe) # displays the whole dataframe
 print(beam_dataframe.head(10)) # quick preview, displays only 10 rows if the dataframe
-csv_dataset = beam_dataframe.to_csv(r"..\data\output\beam_data.csv", index=False) # wo row index
+
+output_path = Path("../data/input/csv/beam_data.csv")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+csv_dataset = beam_dataframe.to_csv(output_path, index=False) # wo row index
 # az 'r' segít meggátolni a speciális string karakterkombók kezelését
 # print(csv_dataset) # -> None
 print("\n *** This is the end. ***")

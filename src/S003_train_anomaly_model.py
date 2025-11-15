@@ -19,7 +19,7 @@ For this in-between step the trained model is going to be saved to file 'isolati
 """
 print("*** This is the start. *** \n")
 # INPUT: reads the placeholder dataset: features_dummy.csv
-input_path = Path("../data/output/features_dummy.csv")
+input_path = Path("../data/output/csv_dataframe/OF3_parts_Pset01_dataframe.csv")
 dataframe = pandas.read_csv(input_path) # 2. reading the file to be a dataframe
 
 # quick check on the dataframe by displaying it, whether we have the expected input
@@ -50,7 +50,7 @@ ml_iforest = IsolationForest( # unsupervised learning for anomaly detection
     contamination = 0.05, # necessary for determining the threshold for outliers, which is the ratio of the most anomalous observations, assumption! no expectation
     random_state = 42 # random seed for reproducibility, which is used to initialize the random number generator
 )
-print(type(ml_iforest)) # <class 'sklearn.ensemble._iforest.IsolationForest'>
+# print(type(ml_iforest)) # <class 'sklearn.ensemble._iforest.IsolationForest'>
 # TRAIN the model
 # using random samples (records) the model creates a decision tree to rate the isolation for each sample by counting the splits of tree
 # isolate a 'normal' sample -> many branch
@@ -74,7 +74,7 @@ flagged_dataframe["AnomalyFlag"] = flags
 flagged_dataframe["Scores"] = scores
 
 # OUTPUT csv
-output_path = Path("../data/output/flagged_features_dummy.csv") # path declaration
+output_path = Path("../data/output/csv_dataframe_flagged/flagged_OF3_parts_Pset01_dataframe.csv") # path declaration
 output_path.parent.mkdir(parents=True, exist_ok=True) # path creation
 # creating a new csv file with the flags
 flagged_dataframe.to_csv(output_path, index=False)
@@ -82,7 +82,7 @@ flagged_dataframe.to_csv(output_path, index=False)
 print(flagged_dataframe.head())
 
 # OUTPUT pkl = the 'whole model itself' including decision trees, hyperparameters, fitted data
-model_output_path = Path("../data/output/models/isolationforest_dummy.pkl")
+model_output_path = Path("../data/output/models/isolationforest_OF3_parts_Pset01.pkl")
 model_output_path.parent.mkdir(parents=True, exist_ok=True)
 joblib.dump(value=ml_iforest, filename=model_output_path)
 print(f"Trained ML saved to: {model_output_path}")
