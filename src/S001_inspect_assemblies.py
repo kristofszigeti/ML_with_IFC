@@ -22,11 +22,11 @@ str_model = ifcopenshell.open(ifc_path)
 
 # We go through the assemblies
 assemblies = str_model.by_type("IfcElementAssembly") # this is a list
-print(f"Numbmer of assemblies: {len(assemblies)} pcs") # so it has a length
+print(f"Number of assemblies: {len(assemblies)} pcs") # so it has a length
 
 # These are a sample
 print("\n === Assembly ===")
-for assembly in assemblies[:]:
+for assembly in assemblies[:5]:
     # if assembly.Tag == "A/27":# [:5] is a list operation on a list: only the first 5 assemblies are printed
         print("GUID:", assembly.GlobalId, "Name:", assembly.Name, "Tag:", assembly.Tag)
 
@@ -49,12 +49,13 @@ for assembly in assemblies[:]:
         print(f"Plates: {len(plates)} pcs | Fasteners: {len(fasteners)} pcs")
 
         if plates:
-            print("Connected plates:")
+            print(2 * " " + "Connected plates:")
             print(plates)
         if fasteners:
-            print("Connected fasteners:")
+            print(2 * " " + "Connected fasteners:")
             for fastener in fasteners:
-                print(f"{fastener.GlobalId}")
+                print(f"   {fastener.GlobalId}")
+            print()
         else:
             print()
 

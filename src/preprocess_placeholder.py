@@ -20,11 +20,11 @@ output_path.parent.mkdir(parents=True, exist_ok=True) # a mapparendszer és útv
 
 # assigning the input csv path to a variable
 input_data_frame = pandas.read_csv(input_path)
-# print(input_data_frame) # original dataframe
+# print(dataframe) # original dataframe
 
 # creating a new column as temporary storage for numerical values inside the dataframe with only ones.
 input_data_frame["Feature"] = 1
-# print(input_data_frame) # original + Column "Feature" with 1-s created
+# print(dataframe) # original + Column "Feature" with 1-s created
 
 # keeping only this numerical Feature column
 output_numerical_data_frame = input_data_frame[["Feature"]]
