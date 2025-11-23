@@ -1,8 +1,0 @@
-ifcopenshell
-pandas
-numpy
-matplotlib
-scikit-learn
-streamlit
-pathlib
-joblib
