@@ -17,7 +17,8 @@ csak megnézzük 3–5 assemblyt, hogy hogy néz ki belül.
 import ifcopenshell
 from pathlib import Path
 
-ifc_path = Path("../data/input/ifc/OF3.ifc")
+ifc_path = Path("../"
+                "../data/input/ifc/Skyline 2.ifc")
 str_model = ifcopenshell.open(ifc_path)
 
 # We go through the assemblies

@@ -31,9 +31,9 @@ from sklearn.ensemble import IsolationForest  # Anomáliadetektáló modell
 from joblib import dump                       # Modell mentéséhez .pkl formában
 
 # 1) Bemeneti és kimeneti útvonalak
-in_path = Path("../data/output/csv_dataframe/plate_features.csv")          # Plate + bolt_count adat
-out_path = Path("../data/output/csv_dataframe_flagged/flagged_plates.csv")     # Ide mentjük az eredményeket
-model_path = Path("../data/models/isoforest_boltcount.pkl")     # Ide mentjük a tanult modellt
+in_path = Path("../../data/output/csv_dataframe/plate_features.csv")          # Plate + bolt_count adat
+out_path = Path("../../data/output/csv_dataframe_flagged/flagged_plates.csv")     # Ide mentjük az eredményeket
+model_path = Path("../../data/models/isoforest_boltcount.pkl")     # Ide mentjük a tanult modellt
 
 # 2) Kimeneti mappák biztosítása
 out_path.parent.mkdir(parents=True, exist_ok=True)   # processed mappa létrehozása, ha nincs

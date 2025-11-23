@@ -31,7 +31,7 @@ raw_path = Path(f"../data/input/csv/{input_raw_csv_filename}.csv")
 flagged_path = Path(f"../data/output/csv_dataframe_flagged/{input_csv_flagged_df_filename}.csv")
 
 # combined dataframes
-relinked_path = Path("../data/output/relinked/joined_data_OF3.csv")
+relinked_path = Path("../../data/output/relinked/joined_data_OF3.csv")
 relinked_path.parent.mkdir(parents=True, exist_ok=True)
 
 
