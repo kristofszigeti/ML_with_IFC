@@ -1,6 +1,9 @@
 import matplotlib.pyplot
 import seaborn
 import pandas
+import numpy as np
+from shapely.coordinates import transform
+
 
 # sample dataframe to test
 # df = pandas.read_csv("../data/output/csv_dataframe_flagged/flagged_plates.csv")
@@ -17,7 +20,7 @@ def plot_anomaly_visualization(df: pandas.DataFrame,
         2/ Scatter Plot of two selected features: It shows spatial, geometric separation.
 
     :param df:
-        The input (passed result) DataFrame containing *AnomalyScore*, *AnomalyFlag* and feature columns.
+        The input (passed result) DataFrame which contains the *AnomalyScore*, *AnomalyFlag* and feature columns.
     :param x_axis_col:
         Name of the column to use for the X-axis on the scatter plot.
     :param y_axis_col:
@@ -26,6 +29,15 @@ def plot_anomaly_visualization(df: pandas.DataFrame,
     :return: ``fig``: **matplotlib.pyplot.Figure**
         The figure object to be rendered in Streamlit UI.
     """
+
+    # 0. BASIC DATA CHECKS - no meaningful visualization with data samples < 3
+    scores_series = df["AnomalyScore"].dropna()
+
+    if scores_series.shape[0] < 3:
+        fig, axes = matplotlib.pyplot.subplots()
+        axes.text(0.5, 0.5, "Not enough data to create visualization.", ha="center", va="center", transform=axes.transAxes)
+        axes.set_axis_off()
+        return fig
 
     # 0. STYLE SETTINGS
     seaborn.set_style("whitegrid")
@@ -41,20 +53,24 @@ def plot_anomaly_visualization(df: pandas.DataFrame,
 
     # 1. HISTOGRAM OF ANOMALY SCORES
     # This histogram depicts how well the algorithm was able to separate anomalies from normal data points.
+    # Decide if KDE is numerically safe and statistically meaningful
+    scores = scores_series.to_numpy()
+    kde_ok = (scores.size >= 10) and (np.std(scores) > 1e-9)
+
     seaborn.histplot(
         data=df,
         x="AnomalyScore",
         hue="AnomalyFlag",
         palette={1: "skyblue", -1: "red"},
-        kde=True,
+        kde=kde_ok, # or True if blowing up is ok, False for turning of the smoothness
         bins=30,
         ax=axes[0], # index of the subplot
         element="bars" # type of histogram
     )
 
     # 1.2. DECLARING DECISION BOUNDARIES = [0]
-    axes[0].axvline(x=0, color="black", linestyle="--", linewidth=2, label="Decision Boundary (0)") # this is a line of decision boundary
-    axes[0].set_title("Anomaly Score Distribution {filename}")
+    # axes[0].axvline(x=0, color="black", linestyle="--", linewidth=2, label="Decision Boundary (0)") # this is a line of decision boundary
+    axes[0].set_title("Anomaly Score Distribution")
     axes[0].set_xlabel("Anomaly Score (< 0: Anomaly, > 0: Normal)")
     axes[0].set_ylabel("Count")
     # axes[0].legend(title="Legend", ) # legend for the histogram

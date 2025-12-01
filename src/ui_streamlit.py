@@ -46,39 +46,44 @@ st.set_page_config(
     page_icon=":streamlit:", # https://fmt.bme.hu/sites/all/themes/epito/images/fmt.bme.hu.png
     initial_sidebar_state="expanded",
 )
-# # WEBPAGE-Body-lvl LOGO
-# # UI LAYOUT: 3 columns for logos
-# col1, col2, col3, col4 = st.sidebar.columns(
-#     spec=4,
-#     gap="small",
-#     width=200
-# )
-# # LOGOS
-# logo_fmt = "https://fmt.bme.hu/sites/all/themes/epito/images/fmt.bme.hu.png"
-# logo_streamlit = "https://images.seeklogo.com/logo-png/44/1/streamlit-logo-png_seeklogo-441815.png"
-# logo_python = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkdgUkYVq9-UPHtkrQyNzA1t-hCdSG65-XYw&s"
-# logo_aut = "https://avatars.githubusercontent.com/u/12133481?s=280&v=4"
-#
-# with col1:
-#     st.image(
-#         image=logo_streamlit,
-#         width=100
-#     )
-# with col2:
-#     st.image(
-#         image=logo_fmt,
-#         width=100
-#     )
-# with col3:
-#     st.image(
-#         image=logo_python,
-#         width=100
-#     )
-# with col4:
-#     st.image(
-#         image=logo_aut,
-#         width=100
-#     )
+# WEBPAGE-Body-lvl LOGO
+# UI LAYOUT: 3 columns for logos
+col1, col2, col3, col4, col5 = st.columns(
+    spec=5,
+    gap="small",
+    width=325
+)
+# LOGOS
+logo_fmt = "https://fmt.bme.hu/sites/all/themes/epito/images/fmt.bme.hu.png"
+logo_streamlit = "https://images.seeklogo.com/logo-png/44/1/streamlit-logo-png_seeklogo-441815.png"
+logo_python = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkdgUkYVq9-UPHtkrQyNzA1t-hCdSG65-XYw&s"
+logo_aut = "https://avatars.githubusercontent.com/u/12133481?s=280&v=4"
+logo_buildingsmart = "https://www.buildingsmart.org/wp-content/uploads/2024/07/buildingSMART-International-favicon-color.png"
+
+with col1:
+    st.image(
+        image=logo_fmt,
+        width=150
+    )
+with col2:
+    st.image(
+        image=logo_aut,
+        width=400
+    )
+with col3:
+    st.image(
+        image=logo_streamlit,
+        width=150
+    )
+with col4:
+    st.image(
+        image=logo_python,
+        width=150
+    )
+with col5:
+    st.image(
+        image=logo_buildingsmart,
+    )
 
 # WEBPAGE-lvl LOGO
 # st.logo(
@@ -88,11 +93,12 @@ st.set_page_config(
 # )
 
 # 2) PAGE TITLE AND DESCRIPTION
-st.title("IFC Anomaly Detection for Structural Elements")
-st.write(
-    "This application analyses an IFC model and detects potential anomalies "
+st.title("IFC Anomaly Detection for Structural Elements with Machine Learning Isolation Forest")
+st.markdown(
+    body="This application analyses an IFC model and detects potential anomalies or draw the attention to possible outliers, "
     "for a selected structural element type (plate, beam, or column) using "
-    "an unsupervised IsolationForest model."
+    "an unsupervised IsolationForest model.",
+    width=1200
 )
 
 # 3) SIDEBAR – USER SETTINGS
@@ -103,7 +109,7 @@ st.sidebar.info("Follow the steps below!")
 # WIDGETS for USER INPUT
 # 3.1 IFC file upload
 uploaded_file = st.sidebar.file_uploader(
-    label=" I. Upload IFC file you would like to analyse",
+    label="I. Upload IFC file you would like to analyse",
     type=["ifc"],
     accept_multiple_files=False,
     help="The file must be in IFC format (.ifc) and embodies a steel structure for correct analysis.",
@@ -112,23 +118,29 @@ uploaded_file = st.sidebar.file_uploader(
 if uploaded_file:
     st.sidebar.success("File uploaded successfully.")
 
+st.sidebar.divider()
+
 # 3.2 Element type selection
 element_type = st.sidebar.selectbox(
-    label=" II. Choose an element type to analyse",
-    options=["Beam", "Column", "Plate"],
+    label="II. Choose an element type to analyse",
+    options=["---", "Beam", "Column", "Plate"],
     index=0,  # default: "beam"
     help="Choose the logical structural element type you want to analyse."
 )
+if element_type != "---":
+    st.sidebar.success(f"{element_type} are chosen to be analysed.")
+
+st.sidebar.divider()
 
 # 3.2 Contamination slider
 contamination = st.sidebar.slider(
-    label=" III. Set the Contamination value (expected anomaly ratio)",
+    label="III. Set the Contamination value (expected anomaly ratio)",
     min_value=0.01,
     max_value=0.20,
     step=0.01,
     value=0.05,
     help=(
-        "Expected proportion of anomalies in the dataset. "
+        "Expected proportion of anomalies in the dataset."
         "A value around 5% is a reasonable starting point."
     ),
 )

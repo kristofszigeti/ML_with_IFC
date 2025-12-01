@@ -1,0 +1,74 @@
+
+│  1. Data Extraction (IfcOpenShell)                           │
+│  ─────────────────────────────────────────────────────────── │
+│  • Input: IFC model of steel structure (beams, columns, etc.)│
+│  • Task: Extract relevant entities and properties (GlobalId, │
+│           Name, Type, Length, Material...)                   │
+│  • Output: structured CSV file (beam_data.csv)               │
+================================================================
+                │
+                ▼
+
+│  2. Data Preprocessing (Pandas)                              │
+│  ─────────────────────────────────────────────────────────── │
+│  • Task: Clean and convert attributes into numerical format. │
+│  • Handle missing values, scale units, normalize features.   │
+│  • Temporary stage may use placeholder numeric values.       │
+│  • Output: features.csv (ready for ML input).                │
+================================================================
+                │
+                ▼
+
+│  3. Model Training (Scikit-Learn)                            │
+│  ─────────────────────────────────────────────────────────── │
+│  • Algorithm: Isolation Forest (unsupervised anomaly det.)   │
+│  • Input: numeric features from features.csv                 │
+│  • Output: trained model (pipeline.pkl) + predictions.csv    │
+│  • Contamination defines expected anomaly ratio.             │
+================================================================
+                │
+                ▼
+
+│  4. Evaluation & Reporting                                   │
+│  ─────────────────────────────────────────────────────────── │
+│  • Compare predicted anomalies to known or synthetic ones.   │
+│  • Generate anomaly statistics (counts, percentages).        │
+│  • Save reports (eval_report.txt) and anomalies_only.csv.    │
+================================================================
+                │
+                ▼
+
+│  5. Inference / Prediction Wrapper                           │
+│  ─────────────────────────────────────────────────────────── │
+│  • Unified entry point: can process new IFC or CSV files.    │
+│  • Steps: extract → preprocess → load model → predict.       │
+│  • Output: annotated CSV with anomaly flags.                 │
+================================================================
+                │
+                ▼
+
+│  6. Model Retraining & Versioning                            │
+│  ─────────────────────────────────────────────────────────── │
+│  • New datasets can retrain model for improved accuracy.     │
+│  • Each version saved with timestamp (pipeline_YYYYMMDD.pkl).│
+│  • Enables long-term learning and reproducibility.           │
+================================================================
+                │
+                ▼
+
+│  7. User Interface (Streamlit / Tkinter)                     │
+│  ─────────────────────────────────────────────────────────── │
+│  • Engineer loads IFC/CSV → clicks “Run Detection”.          │
+│  • App runs inference and displays detected anomalies.       │
+│  • Results can be exported to CSV or visualized directly.    │
+│  • Practical, user-friendly bridge between AI and engineers. │
+================================================================
+                │
+                ▼
+
+│  8. Documentation & Logging                                  │
+│  ─────────────────────────────────────────────────────────── │
+│  • Log parameters, model versions, contamination values.     │
+│  • Keep consistent folder structure and timestamps.          │
+│  • Ensures reproducibility and traceability for the thesis.  │
+================================================================

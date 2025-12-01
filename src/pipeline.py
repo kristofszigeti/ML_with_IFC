@@ -29,7 +29,7 @@ def select_ifc_elements(model: ifcopenshell.file,
         a list of the different, desired ifc entities like IfcPlate / IfcBeam / IfcColumn / IfcMember
     """
 
-    # 1 Makes the input parameter to lowercase
+    # 1 Makes the input parameter to lowercasef
     e_type = element_type.lower()
 
     # 2) Element type → IFC osztálylista
@@ -191,30 +191,31 @@ def extract_element_features_from_ifc(ifc_path: Path, element_type: str) -> pd.D
         # Important note: Key-Value pairs, where the keys can be named !anything! This is what UI is going to show
         row = {
             # Identifier-level metadata
-            "ElementType": e_type,
+            # "ElementType": e_type,
             "IFCClass": ifc_class,
             "GlobalId": guid,
             "Name": name,
             "Tag": tag,
 
-            # dn_Part-based numeric feature(s)
-            "Perimeter": perimeter,
-
             # Tekla Quantity-based numeric features
-            "Weight": weight,
-            "Height": height,
-            "Width": width,
-            "Length": length,
-            "Volume": volume,
+            "Weight (kg)": weight,
+            "Height (mm)": height,
+            "Width (mm)": width,
+            "Length (mm)": length,
+            "Volume (m3)": volume,
+
+            # Specific Pset, Part-based numeric feature(s)
+            "Perimeter (mm)": perimeter,
+
             # "GrossFootprintArea": gross_footprint_area,
-            "NetSurfaceArea": net_surface_area,
-            "AreaPerTons": area_per_tons,
+            "NetSurfaceArea (m2)": net_surface_area,
+            "AreaPerTons (m2/t)": area_per_tons,
 
             # Tekla Common: Elevation-based numeric features
             "Phase": phase,
-            "BottomElevation": bottom_elev,
-            "TopElevation": top_elev,
-            "MidElevation": mid_elev,
+            "BottomElevation (m)": bottom_elev,
+            "TopElevation (m)": top_elev,
+            "MidElevation (m)": mid_elev,
 
             # COG(X,Y,Z)
             # Center of gravity (if available in Tekla Common)
@@ -403,6 +404,7 @@ def run_anomaly_detection(df_features: pd.DataFrame,
     # --- 5) Attach anomaly results back to the feature table ---
     # Attach results back to a copy of the original feature table
     df_flagged = df_features.copy()
+
     df_flagged["AnomalyFlag"] = flags  # Discrete label (+1 / -1)
     df_flagged["AnomalyScore"] = scores  # Continuous anomaly score
 
